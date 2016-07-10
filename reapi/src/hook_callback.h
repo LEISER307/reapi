@@ -22,6 +22,8 @@ enum AType : uint8
 
 struct retval_t
 {
+	char bigbuf[1024 * 12];
+
 	bool set;
 	AType type;
 
