@@ -155,9 +155,8 @@ NOINLINE void DLLEXPORT _callVoidForward(const hook_t* hook, original_t original
 template <typename original_t, typename ...f_args>
 void callVoidForward(size_t func, original_t original, f_args... args)
 {
-	char bigbuf[1024 * 12];
 	hookctx_t hookCtx(sizeof...(args), args...);
-	hookCtx.strings_buf = bigbuf;
+	hookCtx.strings_buf = (char *)alloca(1024 * 12);
 
 	g_hookCtx = &hookCtx;
 	_callVoidForward(g_hookManager.getHookFast(func), original, args...);
@@ -222,9 +221,8 @@ NOINLINE R DLLEXPORT _callForward(const hook_t* hook, original_t original, volat
 template <typename R, typename original_t, typename ...f_args>
 R callForward(size_t func, original_t original, f_args... args)
 {
-	char bigbuf[1024 * 12];
 	hookctx_t hookCtx(sizeof...(args), args...);
-	hookCtx.strings_buf = bigbuf;
+	hookCtx.strings_buf = (char *)alloca(1024 * 12);
 
 	g_hookCtx = &hookCtx;
 	auto ret = _callForward<R>(g_hookManager.getHookFast(func), original, args...);
