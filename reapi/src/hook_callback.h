@@ -109,6 +109,7 @@ struct hookctx_t
 	size_t args_count;
 	size_t args_ptr;
 	AType args_type[MAX_HOOKCHAIN_ARGS];
+	const char* strings_buf;
 };
 
 extern hookctx_t* g_hookCtx;
@@ -154,8 +155,9 @@ NOINLINE void DLLEXPORT _callVoidForward(const hook_t* hook, original_t original
 template <typename original_t, typename ...f_args>
 void callVoidForward(size_t func, original_t original, f_args... args)
 {
-	volatile char bigbuf[1024 * 12];
+	char bigbuf[1024 * 12];
 	hookctx_t hookCtx(sizeof...(args), args...);
+	hookCtx.strings_buf = bigbuf;
 
 	g_hookCtx = &hookCtx;
 	_callVoidForward(g_hookManager.getHookFast(func), original, args...);
@@ -220,8 +222,9 @@ NOINLINE R DLLEXPORT _callForward(const hook_t* hook, original_t original, volat
 template <typename R, typename original_t, typename ...f_args>
 R callForward(size_t func, original_t original, f_args... args)
 {
-	volatile char bigbuf[1024 * 12];
+	char bigbuf[1024 * 12];
 	hookctx_t hookCtx(sizeof...(args), args...);
+	hookCtx.strings_buf = bigbuf;
 
 	g_hookCtx = &hookCtx;
 	auto ret = _callForward<R>(g_hookManager.getHookFast(func), original, args...);
