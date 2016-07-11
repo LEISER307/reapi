@@ -143,7 +143,7 @@ NOINLINE void DLLEXPORT _callVoidForward(const hook_t* hook, original_t original
 			operator char*() { return str; }
 		};
 		volatile buf_t buf;
-		hookCtx->strings_buf = buf.str;
+		hookCtx->strings_buf = (char *)buf.str;
 
 		g_hookCtx = nullptr;
 		original(args...);
@@ -209,7 +209,7 @@ NOINLINE R DLLEXPORT _callForward(const hook_t* hook, original_t original, volat
 			operator char*() { return str; }
 		};
 		volatile buf_t buf;
-		hookCtx->strings_buf = buf.str;
+		hookCtx->strings_buf = (char *)buf.str;
 
 		g_hookCtx = nullptr;
 		auto retVal = original(args...);
